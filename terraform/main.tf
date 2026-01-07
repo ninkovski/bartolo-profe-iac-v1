@@ -7,6 +7,12 @@ terraform {
       version = "~> 3.0"
     }
   }
+
+  # Backend remoto en Azure Storage para el tfstate
+  backend "azurerm" {
+    # Configuración pasada por -backend-config en init
+    # resource_group_name, storage_account_name, container_name, key
+  }
 }
 
 provider "azurerm" {

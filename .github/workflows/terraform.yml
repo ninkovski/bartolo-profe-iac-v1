@@ -80,8 +80,46 @@ jobs:
         run: terraform -chdir=${{ env.WORKING_DIR }} validate
 
       - name: Terraform plan
-        run: terraform -chdir=${{ env.WORKING_DIR }} plan -input=false -out=tfplan
+        id: plan
+        run: terraform -chdir=${{ env.WORKING_DIR }} plan -input=false -out=tfplan 2>&1 | tee plan.log
+        continue-on-error: true
 
       - name: Terraform apply (auto on develop, manual on main)
+        id: apply
         if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.apply == 'true')
-        run: terraform -chdir=${{ env.WORKING_DIR }} apply -input=false tfplan
+        run: terraform -chdir=${{ env.WORKING_DIR }} apply -input=false tfplan 2>&1 | tee apply.log
+        continue-on-error: true
+
+      - name: Upload logs to Azure Storage (always run)
+        if: always()
+        run: |
+          TIMESTAMP=$(date -u +'%Y%m%d-%H%M%S')
+          LOG_NAME="terraform-${TF_ENV}-${TIMESTAMP}"
+          
+          # Subir logs de plan si existe
+          if [ -f "plan.log" ]; then
+            az storage blob upload \
+              --account-name "${{ env.TF_BACKEND_STORAGE_ACCOUNT }}" \
+              --container-name "${{ env.TF_BACKEND_CONTAINER }}" \
+              --name "logs/${LOG_NAME}-plan.log" \
+              --file "plan.log" \
+              --auth-mode login \
+              --overwrite
+          fi
+          
+          # Subir logs de apply si existe
+          if [ -f "apply.log" ]; then
+            az storage blob upload \
+              --account-name "${{ env.TF_BACKEND_STORAGE_ACCOUNT }}" \
+              --container-name "${{ env.TF_BACKEND_CONTAINER }}" \
+              --name "logs/${LOG_NAME}-apply.log" \
+              --file "apply.log" \
+              --auth-mode login \
+              --overwrite
+          fi
+          
+          echo "✅ Logs guardados: ${LOG_NAME}"
+
+      - name: Fail if Terraform failed
+        if: steps.plan.outcome == 'failure' || steps.apply.outcome == 'failure'
+        run: exit 1
