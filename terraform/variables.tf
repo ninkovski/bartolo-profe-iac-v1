@@ -5,7 +5,7 @@ variable "project_name" {
 }
 
 variable "environment" {
-  description = "Ambiente (dev, staging, prod)"
+  description = "Ambiente (dev, cert, prod)"
   type        = string
   default     = "dev"
 }
@@ -19,7 +19,7 @@ variable "location" {
 variable "resource_group_name" {
   description = "Nombre del Resource Group"
   type        = string
-  default     = "rg-bartolo-profe-app"
+  default     = "bartolo-profe-rg"
 }
 
 variable "tags" {

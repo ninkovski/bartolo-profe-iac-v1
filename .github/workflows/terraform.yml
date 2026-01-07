@@ -18,7 +18,7 @@ env:
   TF_BACKEND_RG: ${{ vars.TF_BACKEND_RG || secrets.TF_BACKEND_RG || 'bartolo-profe-rg' }}
   TF_BACKEND_MAIN_RG: ${{ vars.TF_BACKEND_RG || secrets.TF_BACKEND_RG || 'tfstate-rg' }}
   TF_BACKEND_STORAGE_ACCOUNT: ${{ vars.TF_BACKEND_STORAGE_ACCOUNT || secrets.TF_BACKEND_STORAGE_ACCOUNT || 'iaccoretfstate' }}
-  TF_BACKEND_CONTAINER: ${{ vars.TF_BACKEND_CONTAINER || secrets.TF_BACKEND_CONTAINER || 'bartoloprofe-tfstate' }}
+  TF_BACKEND_CONTAINER: ${{ vars.TF_BACKEND_CONTAINER || secrets.TF_BACKEND_CONTAINER || 'bartolo-profe-tfstate' }}
   TF_BACKEND_KEY: ${{ vars.TF_BACKEND_KEY || secrets.TF_BACKEND_KEY || format('bartolo-profe-iac-{0}.tfstate', (github.ref == 'refs/heads/main' && 'prod' || 'dev')) }}
 
   ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
