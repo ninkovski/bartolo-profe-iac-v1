@@ -15,8 +15,7 @@ env:
   TF_ENV: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
   TF_VAR_environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
   TF_VAR_location: ${{ vars.TF_VAR_LOCATION || secrets.TF_VAR_LOCATION || 'centralus' }}
-  TF_BACKEND_RG: ${{ vars.TF_BACKEND_RG || secrets.TF_BACKEND_RG || 'bartolo-profe-rg' }}
-  TF_BACKEND_MAIN_RG: ${{ vars.TF_BACKEND_RG || secrets.TF_BACKEND_RG || 'tfstate-rg' }}
+  TF_BACKEND_RG: ${{ vars.TF_BACKEND_RG || secrets.TF_BACKEND_RG || 'tfstate-rg' }}
   TF_BACKEND_STORAGE_ACCOUNT: ${{ vars.TF_BACKEND_STORAGE_ACCOUNT || secrets.TF_BACKEND_STORAGE_ACCOUNT || 'iaccoretfstate' }}
   TF_BACKEND_CONTAINER: ${{ vars.TF_BACKEND_CONTAINER || secrets.TF_BACKEND_CONTAINER || 'bartolo-profe-tfstate' }}
   TF_BACKEND_KEY: ${{ vars.TF_BACKEND_KEY || secrets.TF_BACKEND_KEY || format('bartolo-profe-iac-{0}.tfstate', (github.ref == 'refs/heads/main' && 'prod' || 'dev')) }}
@@ -50,8 +49,8 @@ jobs:
       - name: Ensure backend RG and storage exist
         run: |
           az group create --name "${{ env.TF_BACKEND_RG }}" --location "${{ env.TF_VAR_location }}"
-          az storage account show --name "${{ env.TF_BACKEND_STORAGE_ACCOUNT }}" --resource-group "${{ env.TF_BACKEND_MAIN_RG }}" >/dev/null 2>&1 \
-            || az storage account create --name "${{ env.TF_BACKEND_STORAGE_ACCOUNT }}" --resource-group "${{ env.TF_BACKEND_MAIN_RG }}" --location "${{ env.TF_VAR_location }}" --sku Standard_LRS --kind StorageV2 --https-only true
+          az storage account show --name "${{ env.TF_BACKEND_STORAGE_ACCOUNT }}" --resource-group "${{ env.TF_BACKEND_RG }}" >/dev/null 2>&1 \
+            || az storage account create --name "${{ env.TF_BACKEND_STORAGE_ACCOUNT }}" --resource-group "${{ env.TF_BACKEND_RG }}" --location "${{ env.TF_VAR_location }}" --sku Standard_LRS --kind StorageV2 --https-only true
 
       - name: Ensure backend container exists
         run: |
@@ -64,7 +63,7 @@ jobs:
       - name: Terraform init (remote backend)
         run: |
           terraform -chdir=${{ env.WORKING_DIR }} init -input=false -upgrade \
-            -backend-config="resource_group_name=${{ env.TF_BACKEND_MAIN_RG  }}" \
+            -backend-config="resource_group_name=${{ env.TF_BACKEND_RG  }}" \
             -backend-config="storage_account_name=${{ env.TF_BACKEND_STORAGE_ACCOUNT }}" \
             -backend-config="container_name=${{ env.TF_BACKEND_CONTAINER }}" \
             -backend-config="key=${{ env.TF_BACKEND_KEY }}"
