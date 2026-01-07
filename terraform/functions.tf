@@ -14,19 +14,19 @@ resource "azurerm_linux_function_app" "process_sale" {
   }
 
   app_settings = {
-    "WEBSITE_RUN_FROM_PACKAGE"                   = 1
-    "FUNCTIONS_WORKER_RUNTIME"                   = "node"
-    "WEBSITE_NODE_DEFAULT_VERSION"               = "~20"
-    "AzureWebJobsFeatureFlags"                   = "EnableWorkerIndexing"
-    
+    "WEBSITE_RUN_FROM_PACKAGE"     = 1
+    "FUNCTIONS_WORKER_RUNTIME"     = "node"
+    "WEBSITE_NODE_DEFAULT_VERSION" = "~20"
+    "AzureWebJobsFeatureFlags"     = "EnableWorkerIndexing"
+
     # Variables para acceder a Key Vault
-    "KEY_VAULT_URL"                              = azurerm_key_vault.main.vault_uri
-    "KEY_VAULT_SMTP_SERVER"                      = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/smtp-server/)"
-    "KEY_VAULT_SMTP_USERNAME"                    = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/smtp-username/)"
-    "KEY_VAULT_SMTP_PASSWORD"                    = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/smtp-password/)"
-    "KEY_VAULT_AIRTABLE_API_KEY"                 = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/airtable-api-key/)"
-    "KEY_VAULT_AIRTABLE_BASE_ID"                 = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/airtable-base-id/)"
-    "KEY_VAULT_MERCADO_PAGO_TOKEN"               = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/mercado-pago-token/)"
+    "KEY_VAULT_URL"                = azurerm_key_vault.main.vault_uri
+    "KEY_VAULT_SMTP_SERVER"        = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/smtp-server/)"
+    "KEY_VAULT_SMTP_USERNAME"      = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/smtp-username/)"
+    "KEY_VAULT_SMTP_PASSWORD"      = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/smtp-password/)"
+    "KEY_VAULT_AIRTABLE_API_KEY"   = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/airtable-api-key/)"
+    "KEY_VAULT_AIRTABLE_BASE_ID"   = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/airtable-base-id/)"
+    "KEY_VAULT_MERCADO_PAGO_TOKEN" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/mercado-pago-token/)"
   }
 
   site_config {
@@ -59,19 +59,19 @@ resource "azurerm_linux_function_app" "process_payment" {
   }
 
   app_settings = {
-    "WEBSITE_RUN_FROM_PACKAGE"                   = 1
-    "FUNCTIONS_WORKER_RUNTIME"                   = "node"
-    "WEBSITE_NODE_DEFAULT_VERSION"               = "~20"
-    "AzureWebJobsFeatureFlags"                   = "EnableWorkerIndexing"
-    
+    "WEBSITE_RUN_FROM_PACKAGE"     = 1
+    "FUNCTIONS_WORKER_RUNTIME"     = "node"
+    "WEBSITE_NODE_DEFAULT_VERSION" = "~20"
+    "AzureWebJobsFeatureFlags"     = "EnableWorkerIndexing"
+
     # Variables para acceder a Key Vault
-    "KEY_VAULT_URL"                              = azurerm_key_vault.main.vault_uri
-    "KEY_VAULT_SMTP_SERVER"                      = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/smtp-server/)"
-    "KEY_VAULT_SMTP_USERNAME"                    = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/smtp-username/)"
-    "KEY_VAULT_SMTP_PASSWORD"                    = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/smtp-password/)"
-    "KEY_VAULT_AIRTABLE_API_KEY"                 = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/airtable-api-key/)"
-    "KEY_VAULT_AIRTABLE_BASE_ID"                 = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/airtable-base-id/)"
-    "KEY_VAULT_GOOGLE_SERVICE_ACCOUNT_KEY"       = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/google-service-account-key/)"
+    "KEY_VAULT_URL"                        = azurerm_key_vault.main.vault_uri
+    "KEY_VAULT_SMTP_SERVER"                = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/smtp-server/)"
+    "KEY_VAULT_SMTP_USERNAME"              = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/smtp-username/)"
+    "KEY_VAULT_SMTP_PASSWORD"              = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/smtp-password/)"
+    "KEY_VAULT_AIRTABLE_API_KEY"           = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/airtable-api-key/)"
+    "KEY_VAULT_AIRTABLE_BASE_ID"           = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/airtable-base-id/)"
+    "KEY_VAULT_GOOGLE_SERVICE_ACCOUNT_KEY" = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.main.vault_uri}secrets/google-service-account-key/)"
   }
 
   site_config {
