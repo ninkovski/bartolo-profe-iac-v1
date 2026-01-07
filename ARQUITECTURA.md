@@ -510,7 +510,7 @@ ProcessPayment Function
 - Variables/entornos:
     - `develop` → `TF_VAR_environment=dev` (despliegue automático).
     - `main` → `TF_VAR_environment=prod` (aplicación manual con `workflow_dispatch`).
-    - `TF_VAR_location` por secreto o `eastus` por defecto.
+    - `TF_VAR_location` por secreto o `centralus` por defecto.
 
 - Outputs y secretos:
     - Terraform expone `key_vault_name` y `key_vault_uri` para tareas posteriores.

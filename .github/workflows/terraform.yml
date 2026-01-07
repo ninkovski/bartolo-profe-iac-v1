@@ -14,7 +14,7 @@ env:
   WORKING_DIR: terraform
   TF_ENV: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
   TF_VAR_environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
-  TF_VAR_location: ${{ vars.TF_VAR_LOCATION || secrets.TF_VAR_LOCATION || 'eastus' }}
+  TF_VAR_location: ${{ vars.TF_VAR_LOCATION || secrets.TF_VAR_LOCATION || 'centralus' }}
   TF_BACKEND_RG: ${{ vars.TF_BACKEND_RG || secrets.TF_BACKEND_RG || 'bartolo-profe-rg' }}
   TF_BACKEND_MAIN_RG: ${{ vars.TF_BACKEND_RG || secrets.TF_BACKEND_RG || 'tfstate-rg' }}
   TF_BACKEND_STORAGE_ACCOUNT: ${{ vars.TF_BACKEND_STORAGE_ACCOUNT || secrets.TF_BACKEND_STORAGE_ACCOUNT || 'iaccoretfstate' }}

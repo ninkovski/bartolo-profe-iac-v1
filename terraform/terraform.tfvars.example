@@ -3,7 +3,7 @@
 
 project_name  = "bartolo-profe-app"
 environment   = "dev"
-location      = "eastus"
+location      = "centralus"
 
 # Secrets - Rellena con tus valores reales
 smtp_server                 = "tu-smtp-server.com"

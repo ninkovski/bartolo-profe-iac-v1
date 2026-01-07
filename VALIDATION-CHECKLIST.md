@@ -142,7 +142,7 @@ Debe contener SOLO estas variables (no-sensibles):
 ```hcl
 variable "project_name"        # bartolo-profe-app
 variable "environment"         # dev
-variable "location"            # eastus
+variable "location"            # centralus
 variable "resource_group_name" # rg-bartolo-profe-app-dev
 variable "tags"                # map de tags
 ```
@@ -165,7 +165,7 @@ Debe contener:
 ```hcl
 environment         = "dev"
 project_name        = "bartolo-profe-app"
-location            = "eastus"
+location            = "eastcentralusus"
 resource_group_name = "rg-bartolo-profe-app-dev"
 tags = { ... }
 ```

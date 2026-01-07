@@ -9,8 +9,8 @@ param(
 )
 
 # Variables
-$RESOURCE_GROUP = "rg-bartolo-profe-app-dev"
-$LOCATION = "eastus"
+$RESOURCE_GROUP = "bartolo-profe-rg-dev"
+$LOCATION = "centralus"
 $PROJECT_NAME = "bartolo-profe-app"
 
 Write-Host "=== Bartolo Profe App - Terraform Deployment ===" -ForegroundColor Cyan

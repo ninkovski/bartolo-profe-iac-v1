@@ -53,7 +53,7 @@ Crea el archivo `terraform/environments/dev.tfvars`:
 # terraform/environments/dev.tfvars
 environment         = "dev"
 project_name        = "bartolo-profe"
-location            = "eastus"
+location            = "centralus"
 resource_group_name = "rg-bartolo-profe-dev"
 
 # Secrets - REEMPLAZAR CON TUS VALORES
@@ -201,7 +201,7 @@ terraform destroy -var-file="environments/dev.tfvars"
     {"clientId":"<guid>","clientSecret":"<secret>","tenantId":"<guid>","subscriptionId":"<guid>"}
     ```
   - Opcionales para backend remoto (con defaults): `TF_BACKEND_RG`, `TF_BACKEND_STORAGE_ACCOUNT`, `TF_BACKEND_CONTAINER`, `TF_BACKEND_KEY`.
-  - Opcional: `TF_VAR_LOCATION` (por defecto `eastus`).
+  - Opcional: `TF_VAR_LOCATION` (por defecto `centralus`).
 
 - Backend remoto:
   - El workflow crea/usa `tfstate-rg`/`iaccoretfstate`/`tfstate` y fija la clave por repo y entorno.

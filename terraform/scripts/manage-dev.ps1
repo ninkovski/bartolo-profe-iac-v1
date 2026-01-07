@@ -6,7 +6,7 @@ param(
     [string]$Action
 )
 
-$RESOURCE_GROUP = "rg-bartolo-profe-app-dev"
+$RESOURCE_GROUP = "bartolo-profe-rg-dev"
 $FUNCTION_SALE = "func-bartolo-profe-app-process-sale-dev"
 $FUNCTION_PAYMENT = "func-bartolo-profe-app-process-payment-dev"
 
