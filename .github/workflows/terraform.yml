@@ -103,7 +103,7 @@ jobs:
               --container-name "${{ env.TF_BACKEND_CONTAINER }}" \
               --name "logs/${LOG_NAME}-plan.log" \
               --file "plan.log" \
-              --auth-mode login \
+              --auth-mode key \
               --overwrite
           fi
           
@@ -114,7 +114,7 @@ jobs:
               --container-name "${{ env.TF_BACKEND_CONTAINER }}" \
               --name "logs/${LOG_NAME}-apply.log" \
               --file "apply.log" \
-              --auth-mode login \
+              --auth-mode key \
               --overwrite
           fi
           
