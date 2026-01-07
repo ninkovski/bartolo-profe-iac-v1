@@ -31,7 +31,7 @@ resource "azurerm_linux_function_app" "process_sale" {
 
   site_config {
     application_stack {
-      node_version = "~20"
+      node_version = "20"
     }
     cors {
       allowed_origins = ["*"]
@@ -76,7 +76,7 @@ resource "azurerm_linux_function_app" "process_payment" {
 
   site_config {
     application_stack {
-      node_version = "~20"
+      node_version = "20"
     }
     cors {
       allowed_origins = ["*"]
