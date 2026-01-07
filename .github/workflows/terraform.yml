@@ -1,0 +1,83 @@
+name: terraform
+
+on:
+  push:
+    branches: [ main, develop, feature/* ]
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Run terraform apply (true/false)"
+        required: true
+        default: "true"
+
+env:
+  WORKING_DIR: terraform
+  TF_ENV: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
+  TF_VAR_environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
+  TF_VAR_location: ${{ vars.TF_VAR_LOCATION || secrets.TF_VAR_LOCATION || 'eastus' }}
+  TF_BACKEND_RG: ${{ vars.TF_BACKEND_RG || secrets.TF_BACKEND_RG || 'bartolo-profe-rg' }}
+  TF_BACKEND_MAIN_RG: ${{ vars.TF_BACKEND_RG || secrets.TF_BACKEND_RG || 'tfstate-rg' }}
+  TF_BACKEND_STORAGE_ACCOUNT: ${{ vars.TF_BACKEND_STORAGE_ACCOUNT || secrets.TF_BACKEND_STORAGE_ACCOUNT || 'iaccoretfstate' }}
+  TF_BACKEND_CONTAINER: ${{ vars.TF_BACKEND_CONTAINER || secrets.TF_BACKEND_CONTAINER || 'bartoloprofe-tfstate' }}
+  TF_BACKEND_KEY: ${{ vars.TF_BACKEND_KEY || secrets.TF_BACKEND_KEY || format('bartolo-profe-iac-{0}.tfstate', (github.ref == 'refs/heads/main' && 'prod' || 'dev')) }}
+
+  ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
+  ARM_CLIENT_SECRET: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
+  ARM_TENANT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).tenantId }}
+  ARM_SUBSCRIPTION_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
+
+jobs:
+  plan_apply:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.14.3
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Ensure backend RG and storage exist
+        run: |
+          az group create --name "${{ env.TF_BACKEND_RG }}" --location "${{ env.TF_VAR_location }}"
+          az storage account show --name "${{ env.TF_BACKEND_STORAGE_ACCOUNT }}" --resource-group "${{ env.TF_BACKEND_MAIN_RG }}" >/dev/null 2>&1 \
+            || az storage account create --name "${{ env.TF_BACKEND_STORAGE_ACCOUNT }}" --resource-group "${{ env.TF_BACKEND_MAIN_RG }}" --location "${{ env.TF_VAR_location }}" --sku Standard_LRS --kind StorageV2 --https-only true
+
+      - name: Ensure backend container exists
+        run: |
+          az storage container create \
+            --name "${{ env.TF_BACKEND_CONTAINER }}" \
+            --account-name "${{ env.TF_BACKEND_STORAGE_ACCOUNT }}" \
+            --auth-mode login \
+            --public-access off
+
+      - name: Terraform init (remote backend)
+        run: |
+          terraform -chdir=${{ env.WORKING_DIR }} init -input=false -upgrade \
+            -backend-config="resource_group_name=${{ env.TF_BACKEND_MAIN_RG  }}" \
+            -backend-config="storage_account_name=${{ env.TF_BACKEND_STORAGE_ACCOUNT }}" \
+            -backend-config="container_name=${{ env.TF_BACKEND_CONTAINER }}" \
+            -backend-config="key=${{ env.TF_BACKEND_KEY }}"
+
+      - name: Terraform fmt (auto-fix)
+        run: terraform -chdir=${{ env.WORKING_DIR }} fmt -recursive
+
+      - name: Terraform validate
+        run: terraform -chdir=${{ env.WORKING_DIR }} validate
+
+      - name: Terraform plan
+        run: terraform -chdir=${{ env.WORKING_DIR }} plan -input=false -out=tfplan
+
+      - name: Terraform apply (auto on develop, manual on main)
+        if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.apply == 'true')
+        run: terraform -chdir=${{ env.WORKING_DIR }} apply -input=false tfplan

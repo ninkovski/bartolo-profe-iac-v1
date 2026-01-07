@@ -1,0 +1,22 @@
+# Copia este archivo a terraform.tfvars y rellena con tus valores
+# cp terraform.tfvars.example terraform.tfvars
+
+project_name  = "bartolo-profe-app"
+environment   = "dev"
+location      = "eastus"
+
+# Secrets - Rellena con tus valores reales
+smtp_server                 = "tu-smtp-server.com"
+smtp_username               = "tu-email@gmail.com"
+smtp_password               = "tu-app-password"
+airtable_api_key            = "pat_xxxxxxxxxxxxx"
+airtable_base_id            = "appEwnUyMa7SRu54V"
+mercado_pago_token          = "tu-token-mercado-pago"
+google_service_account_key  = "{\"type\": \"service_account\", ...}"
+
+tags = {
+  Project     = "bartolo-profe-app"
+  Environment = "dev"
+  Owner       = "tu-nombre"
+  ManagedBy   = "Terraform"
+}

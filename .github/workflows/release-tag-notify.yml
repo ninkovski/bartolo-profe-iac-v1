@@ -1,0 +1,41 @@
+name: rc-tag-and-notify
+
+on:
+  push:
+    branches: [main, develop]
+
+permissions:
+  contents: write
+
+jobs:
+  tag_and_email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute RC tag (UTC)
+        id: vars
+        run: |
+          RC_TAG="RC_$(date -u +'%Y%m%d-%H')"
+          echo "RC_TAG=${RC_TAG}" >> $GITHUB_ENV
+          echo "rc_tag=${RC_TAG}" >> $GITHUB_OUTPUT
+
+      - name: Create and push tag
+        id: tag
+        env:
+          RC_TAG: ${{ env.RC_TAG }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "action@github.com"
+          git fetch --tags
+          if git rev-parse "refs/tags/${RC_TAG}" >/dev/null 2>&1 || git ls-remote --exit-code --tags origin "${RC_TAG}" >/dev/null 2>&1; then
+            echo "Tag ${RC_TAG} already exists; skipping creation."
+            echo "created=false" >> $GITHUB_OUTPUT
+          else
+            git tag "${RC_TAG}"
+            git push origin "${RC_TAG}"
+            echo "created=true" >> $GITHUB_OUTPUT
+          fi
