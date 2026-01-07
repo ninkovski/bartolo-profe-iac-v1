@@ -16,7 +16,7 @@ resource "azurerm_linux_function_app" "process_sale" {
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE"     = 1
     "FUNCTIONS_WORKER_RUNTIME"     = "node"
-    "WEBSITE_NODE_DEFAULT_VERSION" = "~20"
+    "WEBSITE_NODE_DEFAULT_VERSION" = "20"
     "AzureWebJobsFeatureFlags"     = "EnableWorkerIndexing"
 
     # Variables para acceder a Key Vault
@@ -61,7 +61,7 @@ resource "azurerm_linux_function_app" "process_payment" {
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE"     = 1
     "FUNCTIONS_WORKER_RUNTIME"     = "node"
-    "WEBSITE_NODE_DEFAULT_VERSION" = "~20"
+    "WEBSITE_NODE_DEFAULT_VERSION" = "20"
     "AzureWebJobsFeatureFlags"     = "EnableWorkerIndexing"
 
     # Variables para acceder a Key Vault

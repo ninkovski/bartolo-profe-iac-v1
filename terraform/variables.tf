@@ -13,7 +13,7 @@ variable "environment" {
 variable "location" {
   description = "Región de Azure"
   type        = string
-  default     = "eastus"
+  default     = "centralus"
 }
 
 variable "resource_group_name" {
