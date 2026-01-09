@@ -27,10 +27,19 @@ resource "azurerm_key_vault_access_policy" "functions" {
   secret_permissions = ["Get", "List"]
 }
 
-# Access Policy para tu usuario (permite gestionar secrets en desarrollo)
+# Access Policy para el Service Principal que ejecuta Terraform (GitHub Actions)
 resource "azurerm_key_vault_access_policy" "current_user" {
   key_vault_id       = azurerm_key_vault.main.id
   tenant_id          = data.azurerm_client_config.current.tenant_id
   object_id          = data.azurerm_client_config.current.object_id
+  secret_permissions = ["Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"]
+}
+
+# Access Policies para usuarios adicionales (desarrolladores)
+resource "azurerm_key_vault_access_policy" "admin_users" {
+  for_each           = toset(var.keyvault_admin_object_ids)
+  key_vault_id       = azurerm_key_vault.main.id
+  tenant_id          = data.azurerm_client_config.current.tenant_id
+  object_id          = each.value
   secret_permissions = ["Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"]
 }

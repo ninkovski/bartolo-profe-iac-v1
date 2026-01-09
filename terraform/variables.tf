@@ -32,3 +32,9 @@ variable "tags" {
   }
 }
 
+variable "keyvault_admin_object_ids" {
+  description = "Lista de Object IDs de usuarios con permisos de administrador en Key Vault"
+  type        = list(string)
+  default     = []
+}
+
